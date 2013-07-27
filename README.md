@@ -1,9 +1,9 @@
 <a href="http://projectdanube.org/" target="_blank"><img src="http://projectdanube.github.com/xdi2/images/projectdanube_logo.png" align="right"></a>
 <img src="http://projectdanube.github.com/xdi2/images/logo64.png"><br>
 
-This is a pluging for the [XDI2](http://github.com/projectdanube/xdi2) server that makes it possible to dynamically provision XDI link contracts via [OAuth 2.0](http://oauth.net/2/).
+This is a plugin for the [XDI2](http://github.com/projectdanube/xdi2) server.
 
-This is work in progress. 
+It can dynamically provision XDI link contracts via [OAuth 2.0](http://oauth.net/2/).
 
 ### Information
 
