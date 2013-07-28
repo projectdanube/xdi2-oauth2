@@ -21,6 +21,15 @@
 		<url-pattern>/client</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>ClientRedirectServlet</servlet-name>
+		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ClientRedirectServlet</servlet-name>
+		<url-pattern>/client-redirect</url-pattern>
+	</servlet-mapping>
+
 	<!-- XDI SERVLET -->
 
 	<servlet>
