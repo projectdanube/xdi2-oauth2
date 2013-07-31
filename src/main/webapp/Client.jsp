@@ -30,32 +30,35 @@
 	<p class="subheader">Obtain XDI2 Access Token</p>
 
 	<p>This step will initiate an OAuth "code flow" (also known as "server-side flow") to the XDI2 server, in order to obtain an access token.</p>
-	<p>The token is then stored in a local session, and used to send an authenticated XDI message to the XDI2 server.</p>
+	<p>The access token is then used to send an authenticated XDI message to the XDI2 server.</p>
 
-	<form action="client" method="get">
+	<form action="client" method="post">
 
 	<% String authorizationendpoint = (String) request.getAttribute("authorizationendpoint"); if (authorizationendpoint == null) authorizationendpoint = ""; %>
+	<% String clientid = (String) request.getAttribute("clientid"); if (clientid == null) clientid = ""; %>
+	<% String redirecturi = (String) request.getAttribute("redirecturi"); if (redirecturi == null) redirecturi = ""; %>
+	<% String scope = (String) request.getAttribute("scope"); if (scope == null) scope = ""; %>
 
 	<table>
 	<tr>
 	
 	<td><img src="images/oauth2-logo.png" align="middle" style="float:left;padding-right:10px;"></td>
-	<td>OAuth 2.0 Authorization Endpoint: <input type="text" name="authorizationendpoint" value="<%= authorizationendpoint %>" style="width: 200px"></td>
+	<td>OAuth 2.0 Authorization Endpoint: <input type="text" name="authorizationendpoint" value="<%= authorizationendpoint %>" style="width: 400px"></td>
+	</tr><tr>
+	
+	<td><img src="images/oauth2-logo.png" align="middle" style="float:left;padding-right:10px;"></td>
+	<td>OAuth 2.0 Client ID: <input type="text" name="clientid" value="<%= clientid %>" style="width: 400px"></td>
 
 	</tr><tr>
 	
 	<td><img src="images/oauth2-logo.png" align="middle" style="float:left;padding-right:10px;"></td>
-	<td>OAuth 2.0 Redirect URI: <input type="text" name="redirecturi" value="<%= redirecturi %>" style="width: 200px"></td>
+	<td>OAuth 2.0 Redirect URI: <input type="text" name="redirecturi" value="<%= redirecturi %>" style="width: 400px"></td>
 
-	</tr><tr>
-	
-	<td><img src="images/oauth2-logo.png" align="middle" style="float:left;padding-right:10px;"></td>
-	<td>OAuth 2.0 Client ID: <input type="text" name="clientid" value="<%= clientid %>" style="width: 200px"></td>
 
 	</table>
 
 	<p>OAuth 2.0 Scope:</p>
-	<textarea name="input" style="width: 100%" rows="4"><%= request.getAttribute("input") != null ? request.getAttribute("input") : "" %></textarea>
+	<textarea name="scope" style="width: 100%" rows="4"><%= request.getAttribute("scope") != null ? request.getAttribute("scope") : "" %></textarea>
 	
 	<table>
 

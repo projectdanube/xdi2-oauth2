@@ -13,6 +13,33 @@
 	</welcome-file-list>
 
 	<servlet>
+		<servlet-name>AuthorizationServlet</servlet-name>
+		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AuthorizationServlet</servlet-name>
+		<url-pattern>/oauth2-authorization</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>TokenServlet</servlet-name>
+		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TokenServlet</servlet-name>
+		<url-pattern>/oauth2-token</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>RefreshServlet</servlet-name>
+		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>RefreshServlet</servlet-name>
+		<url-pattern>/oauth2-refresh</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
 		<servlet-name>ClientServlet</servlet-name>
 		<servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
 	</servlet>

@@ -21,21 +21,21 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 
 	private static final Logger log = LoggerFactory.getLogger(ClientServlet.class);
 
-	static String sampleInput;
+	static String sampleScope;
 	static String sampleAuthorizationendpoint;
 	static String sampleRedirecturi;
 	static String sampleClientid;
 
 	static {
 
-		InputStream inputStream = ClientServlet.class.getResourceAsStream("message.xdi");
+		InputStream inputStream = ClientServlet.class.getResourceAsStream("scope.xdi");
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		int i;
 
 		try {
 
 			while ((i = inputStream.read()) != -1) outputStream.write(i);
-			sampleInput = new String(outputStream.toByteArray());
+			sampleScope = new String(outputStream.toByteArray());
 		} catch (Exception ex) {
 
 		} finally {
@@ -49,9 +49,9 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 			}
 		}
 
-		sampleAuthorizationendpoint = "/xdi/oauth2-authorization"; 
-		sampleRedirecturi = "/client-redirect"; 
+		sampleAuthorizationendpoint = "/xdi/oauth2-authorization/[=]!1111"; 
 		sampleClientid = "[=]!:uuid:e2ad93e9-511b-4334-9f33-0b29b435bf95"; 
+		sampleRedirecturi = "/client-redirect"; 
 	}
 
 	public ClientServlet() {
@@ -69,37 +69,58 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 
 		log.debug("Incoming GET request to " + request.getRequestURL() + ". Content-Type: " + request.getContentType() + ", Content-Length: " + request.getContentLength());
 
+		// display UI
+
+		request.setAttribute("authorizationendpoint", request.getRequestURL().substring(0, request.getRequestURL().lastIndexOf("/")) + sampleAuthorizationendpoint);
+		request.setAttribute("clientid", sampleClientid);
+		request.setAttribute("redirecturi", request.getRequestURL().substring(0, request.getRequestURL().lastIndexOf("/")) + sampleRedirecturi);
+		request.setAttribute("scope", sampleScope);
+
+		request.getRequestDispatcher("/Client.jsp").forward(request, response);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		log.debug("Incoming POST request to " + request.getRequestURL() + ". Content-Type: " + request.getContentType() + ", Content-Length: " + request.getContentLength());
+
+		String authorizationEndpoint = null;
+		String clientId = null;
+		String redirectURI = null;
+		String scope = null;
+
 		// start OAuth?
 
 		if ("Request Access Token!".equals(request.getParameter("submit"))) {
 
-			String input = request.getParameter("input");
-			String authorizationendpoint = request.getParameter("authorizationendpoint");
-			String redirecturi = request.getParameter("authorizationendpoint");
-			String clientid = request.getParameter("clientid");
+			authorizationEndpoint = request.getParameter("authorizationendpoint");
+			clientId = request.getParameter("clientid");
+			redirectURI = request.getParameter("authorizationendpoint");
+			scope = request.getParameter("scope");
 
-			String scope;
+			// parse the scope
 
-			// parse the input
+			String parsedScope;
 
-			String[] lines = input.split("\n");
+			String[] lines = scope.split("\n");
 			StringBuilder buffer = new StringBuilder();
 
 			for (String line : lines) buffer.append(Base64.encodeBase64URLSafeString(line.getBytes("UTF-8")) + " ");
 
-			scope = buffer.toString();
-			scope = scope.substring(0, scope.length() - 1);
+			parsedScope = buffer.toString();
+			parsedScope = scope.substring(0, scope.length() - 1);
 
-			log.debug("Scope: " + scope);
+			log.debug("Parsed Scope: " + parsedScope);
 
 			// issue the OAuth2 redirect
 
 			try {
 
 				OAuthClientRequest oauthClientRequest = OAuthClientRequest
-						.authorizationLocation(authorizationendpoint)
-						.setClientId(clientid)
-						.setRedirectURI(redirecturi)
+						.authorizationLocation(authorizationEndpoint)
+						.setClientId(clientId)
+						.setRedirectURI(redirectURI)
+						.setScope(parsedScope)
 						.buildQueryMessage();
 
 				response.sendRedirect(oauthClientRequest.getLocationUri());
@@ -116,12 +137,12 @@ public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 			request.setAttribute("error", "Not implemented.");
 		}
 
-		// display results
+		// display UI
 
-		request.setAttribute("input", sampleInput);
 		request.setAttribute("authorizationendpoint", request.getRequestURL().substring(0, request.getRequestURL().lastIndexOf("/")) + sampleAuthorizationendpoint);
-		request.setAttribute("redirecturi", request.getRequestURL().substring(0, request.getRequestURL().lastIndexOf("/")) + sampleRedirecturi);
-		request.setAttribute("clientid", sampleClientid);
+		request.setAttribute("clientid", clientId);
+		request.setAttribute("redirecturi", redirectURI);
+		request.setAttribute("scope", scope);
 
 		request.getRequestDispatcher("/Client.jsp").forward(request, response);
 	}

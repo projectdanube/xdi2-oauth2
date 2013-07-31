@@ -31,6 +31,12 @@
 
 	<!-- WEB SERVLET -->
 
+	<bean id="AuthorizationServlet" class="xdi2.oauth2.authorization.AuthorizationServlet" init-method="init" destroy-method="destroy">
+	</bean>
+	<bean id="TokenServlet" class="xdi2.oauth2.token.TokenServlet" init-method="init" destroy-method="destroy">
+	</bean>
+	<bean id="RefreshServlet" class="xdi2.oauth2.refresh.RefreshServlet" init-method="init" destroy-method="destroy">
+	</bean>
 	<bean id="ClientServlet" class="xdi2.oauth2.client.ClientServlet" init-method="init" destroy-method="destroy">
 	</bean>
 	<bean id="ClientRedirectServlet" class="xdi2.oauth2.client.ClientRedirectServlet" init-method="init" destroy-method="destroy">
