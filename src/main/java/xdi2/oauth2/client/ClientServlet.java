@@ -13,6 +13,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.HttpRequestHandler;
 
 public class ClientServlet extends HttpServlet implements HttpRequestHandler {
 
