@@ -31,8 +31,15 @@
 
 	<!-- WEB SERVLET -->
 
-	<bean id="ConnectServlet" class="xdi2.oauth2.client.ClientServlet" init-method="init" destroy-method="destroy">
-		<property name="graph" ref="graph1" />
+	<bean id="AuthorizationServlet" class="xdi2.oauth2.authorization.AuthorizationServlet" init-method="init" destroy-method="destroy">
+	</bean>
+	<bean id="TokenServlet" class="xdi2.oauth2.token.TokenServlet" init-method="init" destroy-method="destroy">
+	</bean>
+	<bean id="RefreshServlet" class="xdi2.oauth2.refresh.RefreshServlet" init-method="init" destroy-method="destroy">
+	</bean>
+	<bean id="ClientServlet" class="xdi2.oauth2.client.ClientServlet" init-method="init" destroy-method="destroy">
+	</bean>
+	<bean id="ClientRedirectServlet" class="xdi2.oauth2.client.ClientRedirectServlet" init-method="init" destroy-method="destroy">
 	</bean>
 
 	<!-- MESSAGING TARGET at /graph -->
@@ -49,13 +56,24 @@
 			<util:list>
 				<bean class="xdi2.messaging.target.interceptor.impl.BootstrapInterceptor">
 					<property name="bootstrapOwner" value="[=]!1111" />
-					<property name="bootstrapSharedSecret" value="s3cret" />
 					<property name="bootstrapLinkContract" value="true" />
+					<property name="bootstrapPublicLinkContract" value="true" />
 				</bean>
 				<bean class="xdi2.messaging.target.interceptor.impl.VariablesInterceptor" />
 				<bean class="xdi2.messaging.target.interceptor.impl.RefInterceptor" />
 				<bean class="xdi2.messaging.target.interceptor.impl.ToInterceptor" />
-				<ref bean="facebookContributor" />
+				<bean class="xdi2.messaging.target.interceptor.impl.authentication.secrettoken.AuthenticationSecretTokenInterceptor">
+					<property name="secretTokenAuthenticator">
+						<bean class="xdi2.messaging.target.interceptor.impl.authentication.secrettoken.StaticSecretTokenAuthenticator">
+							<property name="globalSalt" value="00000000-0000-0000-0000-000000000000" />
+							<property name="localSaltAndDigestSecretTokens">
+								<util:map>
+									<entry key="[=]!1111" value="xdi2-digest:00000000-0000-0000-0000-000000000000:a7292f2347aef29a9e4c05d35764019106143a339b6e9bb39faee53103e1d6f55e49213d77d16a326a91bab0fc6885779d04e2e4470125720860cf54f872b3bb" />
+								</util:map>
+							</property>
+						</bean>
+					</property>
+				</bean>
 			</util:list>
 		</property>
 	</bean>

@@ -1,3 +1,4 @@
+
 package xdi2.oauth2.authorization;
 
 import java.io.IOException;
@@ -7,9 +8,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.oltu.oauth2.as.issuer.MD5Generator;
-import org.apache.oltu.oauth2.as.issuer.OAuthIssuer;
-import org.apache.oltu.oauth2.as.issuer.OAuthIssuerImpl;
 import org.apache.oltu.oauth2.as.request.OAuthAuthzRequest;
 import org.apache.oltu.oauth2.as.response.OAuthASResponse;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
@@ -29,7 +27,10 @@ public class AuthorizationServlet extends HttpServlet implements HttpRequestHand
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		OAuthIssuer oauthIssuer = new OAuthIssuerImpl(new MD5Generator());
+		String cloudNumber = null;
+		String clientId = null;
+		String redirectURI = null;
+		String scope = null;
 
 		try {
 
@@ -37,9 +38,12 @@ public class AuthorizationServlet extends HttpServlet implements HttpRequestHand
 
 				// parse request
 
+				cloudNumber = extractCloudNumberFromRequest(request);
 				OAuthAuthzRequest oauthRequest = new OAuthAuthzRequest(request);
 
-				String redirectURI = oauthRequest.getRedirectURI();
+				clientId = oauthRequest.getClientId();
+				redirectURI = oauthRequest.getRedirectURI();
+				scope = oauthRequest.getScopes().iterator().next();
 
 				// some code
 
@@ -47,13 +51,13 @@ public class AuthorizationServlet extends HttpServlet implements HttpRequestHand
 
 				// build response
 
-				OAuthResponse oauthResponse = OAuthASResponse
+/*				OAuthResponse oauthResponse = OAuthASResponse
 						.authorizationResponse(request, HttpServletResponse.SC_FOUND)
 						.setCode(oauthIssuer.authorizationCode())
 						.location(redirectURI)
 						.buildQueryMessage();
 
-				response.sendRedirect(oauthResponse.getLocationUri());
+				response.sendRedirect(oauthResponse.getLocationUri());*/
 			} catch (OAuthProblemException ex) {
 
 				if (ex.getRedirectUri() != null) {
@@ -74,5 +78,24 @@ public class AuthorizationServlet extends HttpServlet implements HttpRequestHand
 
 			throw new ServletException(ex.getMessage(), ex);
 		}
+
+		// display UI
+
+		request.setAttribute("cloudnumber", cloudNumber);
+		request.setAttribute("clientid", clientId);
+		request.setAttribute("redirecturi", redirectURI);
+		request.setAttribute("scope", scope);
+
+		request.getRequestDispatcher("/Authorization.jsp").forward(request, response);
 	}
+	
+	private static String extractCloudNumberFromRequest(HttpServletRequest request) {
+		
+		String requestURI = request.getRequestURI();
+		if (requestURI.endsWith("/")) requestURI = requestURI.substring(0, requestURI.length() - 1);
+
+		String cloudNumber = requestURI.substring(requestURI.lastIndexOf('/') + 1);
+		
+		return cloudNumber;
 	}
+}

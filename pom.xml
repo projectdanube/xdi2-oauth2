@@ -5,7 +5,7 @@
 	<groupId>xdi2</groupId>
 	<artifactId>xdi2-oauth2</artifactId>
 	<packaging>${packaging.type}</packaging>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.2-SNAPSHOT</version>
 	<name>xdi2-oauth2</name>
 
 	<issueManagement>
@@ -209,13 +209,19 @@
 				<dependency>
 					<groupId>xdi2</groupId>
 					<artifactId>xdi2-client</artifactId>
-					<version>0.1-SNAPSHOT</version>
+					<version>0.2-SNAPSHOT</version>
 					<scope>compile</scope>
 				</dependency>
 				<dependency>
 					<groupId>xdi2</groupId>
 					<artifactId>xdi2-server</artifactId>
-					<version>0.1-SNAPSHOT</version>
+					<version>0.2-SNAPSHOT</version>
+					<scope>compile</scope>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.oltu.oauth2</groupId>
+					<artifactId>org.apache.oltu.oauth2.client</artifactId>
+					<version>0.31</version>
 					<scope>compile</scope>
 				</dependency>
 			</dependencies>
@@ -278,13 +284,13 @@
 				<dependency>
 					<groupId>xdi2</groupId>
 					<artifactId>xdi2-client</artifactId>
-					<version>0.1-SNAPSHOT</version>
+					<version>0.2-SNAPSHOT</version>
 					<scope>provided</scope>
 				</dependency>
 				<dependency>
 					<groupId>xdi2</groupId>
 					<artifactId>xdi2-server</artifactId>
-					<version>0.1-SNAPSHOT</version>
+					<version>0.2-SNAPSHOT</version>
 					<scope>provided</scope>
 				</dependency>
 			</dependencies>
